@@ -99,8 +99,8 @@ resource "aws_elasticache_replication_group" "replication_group" {
     num_node_groups                 = local.settings.redis.num_node_groups
 
     # todo: doesn't work with password.
-    provisioner "local-exec" {    
-        command = "echo URI=redis://${self.configuration_endpoint_address}:${local.settings.redis.port} > ../simulator.properties"          
+    provisioner "local-exec" {
+        command = "echo URI=$(if [[ ${local.settings.redis.transit_encryption_enabled} ]]; then echo 'rediss'; else echo 'redis'; fi)://${self.configuration_endpoint_address}:${local.settings.redis.port} > ../simulator.properties"
     }
 }
 
